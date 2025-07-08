@@ -1,53 +1,43 @@
-import { vertexShader, fragmentShader } from "$lib/shader/flatShader";
+import { vertexShader, fragmentShader } from "$lib/shaders";
+import { cube } from "$lib/models";
+import Program from "./Program";
+import Particular from "./Particle";
+import Texture from "./Texture";
+import sphere from "../texture/sphere.png";
 
-const triangle = [
-	0.0, 0.5,
-	-0.5, -0.5,
-	0.5, -0.5,
-];
+const { vertices, indices } = cube;
 
 export function render(gl: WebGL2RenderingContext) {
-	gl.clearColor(0, 0, 0, 1.0);
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	// Initialize program
+	const program = new Program(gl);
 
-	const vs = gl.createShader(gl.VERTEX_SHADER);
-	const program = gl.createProgram();
-	if (vs !== null) {
-		gl.shaderSource(vs, vertexShader);
-		gl.compileShader(vs);
-		if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
-			console.error(gl.getShaderInfoLog(vs));
-		}
-		gl.attachShader(program, vs);
-	}
-	
-	const fs = gl.createShader(gl.FRAGMENT_SHADER);
-	if (fs !== null) {
-		gl.shaderSource(fs, fragmentShader);
-		gl.compileShader(fs);
-		if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
-			console.error(gl.getShaderInfoLog(fs));
-		}
-		gl.attachShader(program, fs);
-	}
+	// InitializeShader
+	program.setShader(vertexShader, fragmentShader);
+	program.setVars(vertices, indices, []);
+	const paticular = new Particular(gl);
+	const texture = new Texture(gl, sphere);
+	setTimeout(() => {
+		gl.clearColor(0.2, 0.2, 0.2, 1.0);
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-	gl.linkProgram(program);
-	if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-		console.error(gl.getProgramInfoLog(program));
-	}
+		// Update Particules
+		gl.bindBuffer(gl.ARRAY_BUFFER, paticular.buffer);
+		gl.vertexAttribPointer(program.aVertexPosition, 4, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(program.aVertexPosition);
 
-	gl.validateProgram(program);
-	if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
-		console.error(gl.getProgramInfoLog(program));
-	}
+		// Update ModelView
+		// Update Projection (Camera)
 
-	const vbo = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangle), gl.STATIC_DRAW);
+		// Activate texture
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_2D, texture.texture);
+		gl.uniform1i(program.uTexture, 0);
 
-	const pal = gl.getAttribLocation(program, 'vert');
-	gl.vertexAttribPointer(pal, 2, gl.FLOAT, false, 2 * Float32Array.BYTES_PER_ELEMENT, 0);
-	gl.enableVertexAttribArray(pal);
-	gl.useProgram(program);
-	gl.drawArrays(gl.TRIANGLES, 0, 3);
+		// Draw	
+		gl.drawArrays(gl.POINTS, 0, paticular.particleSize());
+
+		// Clean
+		gl.bindBuffer(gl.ARRAY_BUFFER, null);
+	}, 133.333); // 30fps
 }
