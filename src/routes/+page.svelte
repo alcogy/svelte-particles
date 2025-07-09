@@ -3,45 +3,51 @@
 	import { render } from "$lib/webgl";
 		
 	let canvas: HTMLCanvasElement;
-	let gl: WebGL2RenderingContext | null;
-	let screen: { width: number, height: number } = $state({ width: 0, height: 0 });
-
-	$effect(() => {
-		if (screen.width === 0 || screen.width === 0) return;
-		
-		gl = canvas.getContext('webgl2');
+	let value = $state('test');
+	
+	onMount(()=> {
+		resizeWindow();
+		const gl = canvas.getContext('webgl2');
 		if (!gl) {
 			console.error('No WebGL2');
 			return;
 		}
 		render(gl);
 	});
-	
-	onMount(()=> {
-		resizeWindow();
-	});
 
 	function resizeWindow() {
 		const rect = document.querySelector('body')?.getBoundingClientRect();
+		const panelWidth = document.querySelector('.controller')?.getBoundingClientRect().width || 0;
+
 		if (rect !== undefined) {
-			screen.width = rect.width;
-			screen.height = rect.height;
+			canvas.width = rect.width - panelWidth;
+			canvas.height = rect.height;
 		}
 	}
 </script>
 
 <svelte:window onresize={resizeWindow} />
 
-<canvas
-	width={screen.width}
-	height={screen.height}
-	bind:this={canvas}
-></canvas>
+<div class="wrap">
+	<canvas bind:this={canvas}></canvas>
+	<div class="controller">
+		<input type="text" bind:value={value} />
+	</div>
+</div>
+
 
 <style>
+	.wrap {
+		display: flex;
+	}
 	canvas {
 		display: block;
 		padding: 0;
 		margin: 0;
+	}
+	.controller {
+		width: 280px;
+		padding: 16px;
+		background-color: #1a1a1a;
 	}
 </style>

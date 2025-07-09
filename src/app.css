@@ -13,3 +13,11 @@ body {
 	width: 100vw;
 	height: 100vh;
 }
+
+input, select, textarea {
+	background-color: #151515;
+	border: 1px solid #555;
+	padding: 4px 8px;
+	border-radius: 6px;
+	width: 100%;
+}
