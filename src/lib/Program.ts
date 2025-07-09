@@ -39,7 +39,7 @@ export default class Program {
 		this.gl.useProgram(this.program);
 	}
 	
-	setVars(vertices: number[], indices: number[], normals: number[]) {
+	setVars() {
 		
 		const projectionMatrix = mat4.create();
 		const modelViewMatrix = mat4.create();
@@ -61,7 +61,7 @@ export default class Program {
 			10000,
 		);
 		mat4.identity(modelViewMatrix);
-		mat4.translate(modelViewMatrix, modelViewMatrix, [-1, -1, -5]);
+		mat4.translate(modelViewMatrix, modelViewMatrix, [-2, -8, -5]);
 		
 		this.gl.uniformMatrix4fv(this.uModelViewMatrix, false, modelViewMatrix);
 		this.gl.uniformMatrix4fv(this.uProjectionMatrix, false, projectionMatrix);

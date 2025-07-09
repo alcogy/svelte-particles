@@ -9,7 +9,7 @@ in vec4 aVertexPosition;
 void main()
 {
 	gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-	gl_PointSize = 22.0;
+	gl_PointSize = 8.0;
 }
 `;
 
