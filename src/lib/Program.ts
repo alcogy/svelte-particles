@@ -37,13 +37,7 @@ export default class Program {
 		}
 
 		this.gl.useProgram(this.program);
-	}
-	
-	setVars() {
-		
-		const projectionMatrix = mat4.create();
-		const modelViewMatrix = mat4.create();
-				
+
 		// Attributes
 		this.aVertexPosition = this.gl.getAttribLocation(this.program, 'aVertexPosition');
 		this.aVertexNormal = this.gl.getAttribLocation(this.program, 'aVertexNormal');
@@ -52,20 +46,19 @@ export default class Program {
 		this.uModelViewMatrix = this.gl.getUniformLocation(this.program, 'uModelViewMatrix');
 		this.uProjectionMatrix = this.gl.getUniformLocation(this.program, 'uProjectionMatrix');
 		this.uTexture = this.gl.getUniformLocation(this.program, 'uTexture');
-		
+	}
+	
+	setCamera(camera: Camera) {
+		const projectionMatrix = mat4.create();
 		mat4.perspective(
 			projectionMatrix,
-			45 * (Math.PI / 180),
+			camera.fov,
 			this.gl.canvas.width / this.gl.canvas.height,
-			0.1,
-			10000,
+			camera.minZ,
+			camera.maxZ,
 		);
-		mat4.identity(modelViewMatrix);
-		mat4.translate(modelViewMatrix, modelViewMatrix, [-2, -8, -5]);
-		
-		this.gl.uniformMatrix4fv(this.uModelViewMatrix, false, modelViewMatrix);
 		this.gl.uniformMatrix4fv(this.uProjectionMatrix, false, projectionMatrix);
-				
+		this.gl.uniformMatrix4fv(this.uModelViewMatrix, false, camera.getCameraMatrix());
 	}
 
 }

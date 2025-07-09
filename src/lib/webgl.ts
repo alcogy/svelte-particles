@@ -1,35 +1,36 @@
 import { vertexShader, fragmentShader } from "$lib/shaders";
-import { cube } from "$lib/models";
 import Program from "./Program";
 import Particular from "./Particle";
 import Texture from "./Texture";
+import Camera from "./Camera";
 import sphere from "../texture/sphere.png";
 
-const { vertices, indices } = cube;
+const fps = 30;
 
 export function render(gl: WebGL2RenderingContext) {
 	// Initialize program
 	const program = new Program(gl);
+	const camera = new Camera();
 
 	// InitializeShader
 	program.setShader(vertexShader, fragmentShader);
-	program.setVars();
+	
 	const paticular = new Particular(gl);
 	const texture = new Texture(gl, sphere);
 
 	let frame = 1;
 	const animationId = setInterval(() => {
 		// Update Particules
-		paticular.updateParticlePositions(gl);
+		// paticular.updateParticlePositions();
+		
+		// Update Camera
+		camera.move([0, 0.005, -0.01]);
+		program.setCamera(camera);
 
-		gl.clearColor(0.1, 0.1, 0.1, 1.0);
+		gl.clearColor(0, 0, 0, 1);
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-
-		// Update ModelView
-		// Update Projection (Camera)
-
+		
 		// Activate texture
 		gl.activeTexture(gl.TEXTURE0);
 		gl.bindTexture(gl.TEXTURE_2D, texture.texture);
@@ -37,6 +38,7 @@ export function render(gl: WebGL2RenderingContext) {
 
 		// Buffer
 		gl.bindBuffer(gl.ARRAY_BUFFER, paticular.buffer);
+		gl.bufferData(gl.ARRAY_BUFFER, paticular.particlesSingleArray(), gl.STATIC_DRAW);
 		gl.vertexAttribPointer(program.aVertexPosition, 4, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(program.aVertexPosition);
 
@@ -46,10 +48,10 @@ export function render(gl: WebGL2RenderingContext) {
 		// Clean
 		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 		frame++;
-		if (frame >= 150) {
+		if (frame > fps * 5) {
 			clearInterval(animationId);
 			
 		}
 
-	}, 1000/30); // 30fps
+	}, 1000/fps); // 30fps
 }

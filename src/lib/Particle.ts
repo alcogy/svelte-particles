@@ -6,15 +6,14 @@ export default class Particular {
 	buffer: WebGLBuffer;
 
 	constructor(gl: WebGL2RenderingContext) {
-		for (let i = 0; i < 24; i++) {
-			for (let j = 0; j < 64; j++) {
+		for (let i = -12; i < 12; i++) {
+			for (let j = -24; j < 24; j++) {
 				for (let k = 0; k < 12; k++) {
 					const rand = Math.random();
-					this.particles.push(new Particule({ x: i * Math.min(rand, 0.2), y: j * Math.min(rand, 0.15), z: k * Math.min(rand, 0.4) }, origin));
+					this.particles.push(new Particule({ x: i * Math.min(rand, 0.3), y: j * Math.min(rand, 0.15), z: k * Math.min(rand, 0.4) }, origin));
 				}
 			}
 		}
-		
 		this.buffer = gl.createBuffer();
 	}
 
@@ -34,13 +33,10 @@ export default class Particular {
 		return this.particles.length * 3;
 	}
 
-	updateParticlePositions(gl: WebGL2RenderingContext) {
+	updateParticlePositions() {
 		for (const pt of this.particles) {
 			pt.position.y += 0.005;
 		}
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-		gl.bufferData(gl.ARRAY_BUFFER, this.particlesSingleArray(), gl.STATIC_DRAW);
-		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 	}
 }
 

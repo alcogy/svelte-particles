@@ -1,11 +1,18 @@
-import { vec3 } from "gl-matrix";
+import { vec3, mat4 } from "gl-matrix";
 
 export default class Camera {
-	position: vec3;
-	fov: number = 45;
+	eye: vec3 = [0, 0, -1];
+	target: vec3 = [0, 0, 0];
+	fov: number = 45 * (Math.PI / 180);
 	minZ: number = 0.1;
-	maxZ: number = 10000;
-	constructor() {
-		this.position = vec3.create();
+	maxZ: number = 1000;
+
+	move(position: vec3) {
+		vec3.add(this.eye, this.eye, position);
+	}
+
+	getCameraMatrix(): mat4 {
+		const matrix = mat4.create();
+		return mat4.lookAt(matrix, this.eye, this.target, [0, 1, 0]);
 	}
 }
