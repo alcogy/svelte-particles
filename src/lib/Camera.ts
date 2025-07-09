@@ -18,4 +18,9 @@ export default class Camera {
 		const matrix = mat4.create();
 		return mat4.lookAt(matrix, this.eye, this.target, [0, 1, 0]);
 	}
+
+	reset() {
+		this.eye = [0, 0, -1];
+		this.target = [0, 0, 0];
+	}
 }

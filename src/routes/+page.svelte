@@ -5,6 +5,8 @@
 	let canvas: HTMLCanvasElement;
 	let value = $state('test');
 	let scene: Scene;
+	let timer: number = 0;
+	let frame: number = $state(1);
 
 	onMount(() => {
 		resizeWindow();
@@ -16,6 +18,13 @@
 		scene = new Scene(canvas, gl);
 		scene.load().then(() => scene.render());
 	});
+
+	function startAnimation() {
+		timer = setInterval(() => {
+			scene.animation()
+			frame++;
+		}, 1000 / 30);
+	}
 
 	function resizeWindow() {
 		const rect = document.querySelector('body')?.getBoundingClientRect();
@@ -35,6 +44,15 @@
 	<canvas bind:this={canvas}></canvas>
 	<div class="controller">
 		<input type="text" bind:value={value} />
+		<p>Frame: {frame}</p>
+		<div>
+			<button class="btn" onclick={() => startAnimation()}>Start</button>
+			<button class="btn" onclick={() => clearInterval(timer)}>Stop</button>
+			<button class="btn" onclick={() => {scene.reset(); frame = 1;}}>Reset</button>
+		</div>
+		<div>
+			<button class="btn" onclick={() => scene.resetCamera()}>ResetCamera</button>
+		</div>
 	</div>
 </div>
 
@@ -51,8 +69,10 @@
 	}
 	.controller {
 		width: 280px;
-		white-space: nowrap;
 		padding: 16px;
 		background-color: #1a1a1a;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 </style>

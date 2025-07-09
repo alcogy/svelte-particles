@@ -13,7 +13,7 @@ export default class Scene {
 	private camera: Camera;
 	private particular: Particular;
 	private texture: Texture;
-	
+
 	private isMouseDown: boolean = false;
 	private mouse: Position = originPosiotion;
 
@@ -42,6 +42,20 @@ export default class Scene {
 
 	async load() {
 		await this.texture.setTexture(sphere);
+	}
+
+	animation() {
+		this.particular.updateParticlePositions();
+		this.render();
+	}
+
+	reset() {
+		this.particular.reset();
+		this.render();	
+	}
+
+	resetCamera() {
+		this.camera.reset();
 	}
 
 	async render() {
@@ -89,7 +103,7 @@ export default class Scene {
 	}
 
 	onMouseWheel(e: WheelEvent) {
-		this.camera.move([0, 0, e.deltaY > 0 ? 0.03 : -0.03]);
+		this.camera.move([0, 0, e.deltaY > 0 ? 0.05 : -0.05]);
 		this.render();
 	}
 

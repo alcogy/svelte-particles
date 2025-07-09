@@ -1,13 +1,11 @@
 
 import Camera from "./Camera";
-import Texture from "./Texture";
 import Shader from "./Shader";
 
 import { mat4 } from "gl-matrix";
 
 export default class Program {
 	program: WebGLProgram;
-	// vao: WebGLVertexArrayObject;
 		
 	uModelViewMatrix: WebGLUniformLocation | null = null;
 	uProjectionMatrix: WebGLUniformLocation | null = null;
