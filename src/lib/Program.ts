@@ -7,7 +7,6 @@ import { mat4 } from "gl-matrix";
 
 export default class Program {
 	program: WebGLProgram;
-	gl: WebGL2RenderingContext;
 	// vao: WebGLVertexArrayObject;
 		
 	uModelViewMatrix: WebGLUniformLocation | null = null;
@@ -17,48 +16,43 @@ export default class Program {
 	aVertexNormal: GLuint = 0;
 	
 	constructor(gl: WebGL2RenderingContext) {
-		this.gl = gl;
-		this.program = this.gl.createProgram();
-		this.gl.enable(gl.BLEND);
-		this.gl.disable(gl.DEPTH_TEST);
-		this.gl.depthFunc(gl.LESS);
-		this.gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+		this.program = gl.createProgram();
 	}
 
-	setShader(vertexShader: string, fragmentShader: string) {
-		const vs = new Shader(this.gl, this.gl.VERTEX_SHADER, vertexShader);
-		const fs = new Shader(this.gl, this.gl.FRAGMENT_SHADER, fragmentShader);
-		if (vs.shader !== null) this.gl.attachShader(this.program, vs.shader);
-		if (fs.shader !== null) this.gl.attachShader(this.program, fs.shader);
+	setShader(gl: WebGL2RenderingContext, vertexShader: string, fragmentShader: string) {
+		const vs = new Shader(gl, gl.VERTEX_SHADER, vertexShader);
+		const fs = new Shader(gl, gl.FRAGMENT_SHADER, fragmentShader);
+		if (vs.shader !== null) gl.attachShader(this.program, vs.shader);
+		if (fs.shader !== null) gl.attachShader(this.program, fs.shader);
 
-		this.gl.linkProgram(this.program);
-		if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {
+		gl.linkProgram(this.program);
+		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
 			console.error('Could not initialize shader');
 		}
 
-		this.gl.useProgram(this.program);
+		gl.useProgram(this.program);
 
 		// Attributes
-		this.aVertexPosition = this.gl.getAttribLocation(this.program, 'aVertexPosition');
-		this.aVertexNormal = this.gl.getAttribLocation(this.program, 'aVertexNormal');
+		this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
+		this.aVertexNormal = gl.getAttribLocation(this.program, 'aVertexNormal');
 
 		// Uniforms
-		this.uModelViewMatrix = this.gl.getUniformLocation(this.program, 'uModelViewMatrix');
-		this.uProjectionMatrix = this.gl.getUniformLocation(this.program, 'uProjectionMatrix');
-		this.uTexture = this.gl.getUniformLocation(this.program, 'uTexture');
+		this.uModelViewMatrix = gl.getUniformLocation(this.program, 'uModelViewMatrix');
+		this.uProjectionMatrix = gl.getUniformLocation(this.program, 'uProjectionMatrix');
+		this.uTexture = gl.getUniformLocation(this.program, 'uTexture');
 	}
 	
-	setCamera(camera: Camera) {
+	setCamera(gl: WebGL2RenderingContext, camera: Camera) {
 		const projectionMatrix = mat4.create();
 		mat4.perspective(
 			projectionMatrix,
 			camera.fov,
-			this.gl.canvas.width / this.gl.canvas.height,
+			gl.canvas.width / gl.canvas.height,
 			camera.minZ,
 			camera.maxZ,
 		);
-		this.gl.uniformMatrix4fv(this.uProjectionMatrix, false, projectionMatrix);
-		this.gl.uniformMatrix4fv(this.uModelViewMatrix, false, camera.getCameraMatrix());
+		gl.uniformMatrix4fv(this.uProjectionMatrix, false, projectionMatrix);
+		gl.uniformMatrix4fv(this.uModelViewMatrix, false, camera.getCameraMatrix());
 	}
 
 }

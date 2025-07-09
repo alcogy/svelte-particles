@@ -9,6 +9,9 @@ export default class Camera {
 
 	move(position: vec3) {
 		vec3.add(this.eye, this.eye, position);
+		if (this.eye[2] >= -0.05) {
+			this.eye[2] = -0.05;
+		}
 	}
 
 	getCameraMatrix(): mat4 {

@@ -23,3 +23,13 @@ export const originHomogeneous: Homogeneous = {
 	z: 0,
 	w: 1,
 }
+
+export type Position = {
+	x: number;
+	y: number;
+}
+
+export const originPosiotion: Position = {
+	x: 0,
+	y: 0,
+}

@@ -1,18 +1,20 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { render } from "$lib/webgl";
+	import Scene from "$lib/Scene";
 		
 	let canvas: HTMLCanvasElement;
 	let value = $state('test');
-	
-	onMount(()=> {
+	let scene: Scene;
+
+	onMount(() => {
 		resizeWindow();
 		const gl = canvas.getContext('webgl2');
 		if (!gl) {
 			console.error('No WebGL2');
 			return;
 		}
-		render(gl);
+		scene = new Scene(canvas, gl);
+		scene.load().then(() => scene.render());
 	});
 
 	function resizeWindow() {
@@ -22,6 +24,7 @@
 		if (rect !== undefined) {
 			canvas.width = rect.width - panelWidth;
 			canvas.height = rect.height;
+			if (scene) scene.render();
 		}
 	}
 </script>
@@ -41,12 +44,14 @@
 		display: flex;
 	}
 	canvas {
+		flex: 1;
 		display: block;
 		padding: 0;
 		margin: 0;
 	}
 	.controller {
 		width: 280px;
+		white-space: nowrap;
 		padding: 16px;
 		background-color: #1a1a1a;
 	}

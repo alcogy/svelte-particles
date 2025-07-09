@@ -13,7 +13,7 @@ export async function render(gl: WebGL2RenderingContext) {
 	const camera = new Camera();
 
 	// InitializeShader
-	program.setShader(vertexShader, fragmentShader);
+	// program.setShader(vertexShader, fragmentShader);
 	
 	const paticular = new Particular(gl);
 	const texture = new Texture(gl);
@@ -25,7 +25,7 @@ export async function render(gl: WebGL2RenderingContext) {
 		
 		// Update Camera
 		camera.move([0, 0.005, -0.01]);
-		program.setCamera(camera);
+		// program.setCamera(camera);
 
 		
 		// frame++;

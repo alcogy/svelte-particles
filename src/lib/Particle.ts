@@ -6,11 +6,11 @@ export default class Particular {
 	buffer: WebGLBuffer;
 
 	constructor(gl: WebGL2RenderingContext) {
-		for (let i = -12; i < 12; i++) {
+		for (let i = -16; i < 16; i++) {
 			for (let j = -24; j < 24; j++) {
-				for (let k = 0; k < 12; k++) {
+				for (let k = -4; k < 12; k++) {
 					const rand = Math.random();
-					this.particles.push(new Particule({ x: i * Math.min(rand, 0.3), y: j * Math.min(rand, 0.15), z: k * Math.min(rand, 0.4) }, origin));
+					this.particles.push(new Particule({ x: i * Math.min(rand, 0.2), y: j * Math.min(rand, 0.3), z: k * Math.min(rand, 0.5) }, origin));
 				}
 			}
 		}
