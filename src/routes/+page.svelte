@@ -3,11 +3,11 @@
 	import Scene from "$lib/Scene";
 		
 	let canvas: HTMLCanvasElement;
-	let value = $state('test');
+	let emitterPosition = $state({ x: 0, y: 0, z: 0 });
 	let scene: Scene;
 	let timer: number = 0;
 	let frame: number = $state(1);
-
+	
 	onMount(() => {
 		resizeWindow();
 		const gl = canvas.getContext('webgl2');
@@ -21,7 +21,7 @@
 
 	function startAnimation() {
 		timer = setInterval(() => {
-			scene.animation()
+			scene.animation();
 			frame++;
 		}, 1000 / 30);
 	}
@@ -43,8 +43,35 @@
 <div class="wrap">
 	<canvas bind:this={canvas}></canvas>
 	<div class="controller">
-		<input type="text" bind:value={value} />
-		<p>Frame: {frame}</p>
+		<h3>Emitter</h3>
+		<div class="emitter">
+			<div class="item">
+				<span>x</span>
+				<input
+					type="number"
+					bind:value={emitterPosition.x}
+					onchange={() => scene.updateEmitter(emitterPosition)}
+				 />
+			</div>
+			<div class="item">
+				<span>y</span>
+				<input
+					type="number"
+					bind:value={emitterPosition.y}
+					onchange={() => scene.updateEmitter(emitterPosition)}
+				 />
+			</div>
+			<div class="item">
+				<span>z</span>
+				<input
+					type="number"
+					bind:value={emitterPosition.z}
+					onchange={() => scene.updateEmitter(emitterPosition)}
+				 />
+			</div>
+		</div>
+		<h3>Animation</h3>
+		<div>Frame: {frame}</div>
 		<div>
 			<button class="btn" onclick={() => startAnimation()}>Start</button>
 			<button class="btn" onclick={() => clearInterval(timer)}>Stop</button>
@@ -74,5 +101,16 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+	}
+	.emitter {
+		display: flex;
+		gap: 12px;
+	}
+	.emitter .item {
+		display: flex;
+		gap: 4px;
+	}
+	h3 {
+		margin-bottom: 4px;
 	}
 </style>

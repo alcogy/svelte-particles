@@ -56,6 +56,16 @@ export default class Scene {
 
 	resetCamera() {
 		this.camera.reset();
+		this.render();
+	}
+
+	updateEmitter(ep: {x: number; y: number; z: number}) {
+		this.particular.emitPosition = {
+			x: ep.x,
+			y: ep.y,
+			z: ep.z,
+			w: 1,
+		}
 	}
 
 	async render() {
@@ -98,12 +108,12 @@ export default class Scene {
 		this.mouse.x = e.clientX;
 		this.mouse.y = e.clientY;
 
-		this.camera.move([diff.x * 0.01, diff.y * 0.01, 0]);
+		this.camera.move([diff.x * 0.02, diff.y * 0.02, 0]);
 		this.render();
 	}
 
 	onMouseWheel(e: WheelEvent) {
-		this.camera.move([0, 0, e.deltaY > 0 ? 0.05 : -0.05]);
+		this.camera.move([0, 0, e.deltaY > 0 ? -0.2 : 0.2]);
 		this.render();
 	}
 

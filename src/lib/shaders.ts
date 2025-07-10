@@ -8,8 +8,12 @@ in vec4 aVertexPosition;
 
 void main()
 {
-	gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-	gl_PointSize = 8.0;
+	gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition.xyz, 1.0);
+	if (aVertexPosition.xyz == vec3(0.0, 0.0, 0.0)) {
+		gl_PointSize = 0.0;
+ 	} else {
+		gl_PointSize = 12.0 * aVertexPosition.w;
+	}
 }
 `;
 
@@ -22,8 +26,7 @@ out vec4 fragColor;
 
 void main()
 {
-	vec4 textureColor = texture(uTexture, gl_PointCoord);
-	fragColor = textureColor;
+	fragColor = texture(uTexture, gl_PointCoord);
 }
 `;
 

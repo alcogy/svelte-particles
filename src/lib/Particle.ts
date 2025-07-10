@@ -4,7 +4,8 @@ import { origin } from "./Utils";
 export default class Particular {
 	particles: Particule[] = [];
 	buffer: WebGLBuffer;
-
+	elapsed: number = 0;
+	emitPosition: Coordinates = { x: 0, y: 0, z: 0, w: 1 }
 	constructor(gl: WebGL2RenderingContext) {
 		this.reset();
 		this.buffer = gl.createBuffer();
@@ -17,7 +18,7 @@ export default class Particular {
 			data[index] = this.particles[i].position.x;
 			data[index + 1] = this.particles[i].position.y;
 			data[index + 2] = this.particles[i].position.z;
-			data[index + 3] = 1;
+			data[index + 3] = this.particles[i].position.w;
 		}
 		return data;
 	}
@@ -27,22 +28,51 @@ export default class Particular {
 	}
 
 	updateParticlePositions() {
+		const acceleration = 0.05;
 		for (const pt of this.particles) {
-			const f = Math.random() * 0.01 + 0.02;
-			pt.position.y -= f;
-			pt.position.z -= 0.01;
+			pt.position.x += pt.velocity.x * acceleration;
+			pt.position.y += pt.velocity.y * acceleration;
+			pt.position.z += pt.velocity.z * acceleration;
+			pt.position.w -= pt.velocity.w * acceleration * 0.1;
+			if (pt.position.w <= 0) {
+				pt.position = this.newParticlePosition();
+			}
 		}
+		// if (this.particles.length < 30000) {
+		// 	this.addParticular(512);
+		// }
 	}
 
 	reset() {
+		this.elapsed = 0;
 		this.particles = [];
-		for (let i = -16; i < 16; i++) {
-			for (let j = 8; j < 64; j++) {
-				for (let k = -2; k < 24; k++) {
-					const rand = Math.random();
-					this.particles.push(new Particule({ x: i * Math.min(rand, 0.2), y: j * Math.min(rand, 0.3), z: k * Math.min(rand, 0.5), w: 1 }, origin));
-				}
+		this.addParticular(20000);
+	}
+
+	addParticular(size: number) {
+		if (this.elapsed > 0) {
+			this.elapsed--;
+			return;
+		}
+		this.elapsed = 20;
+		for (let i = 0; i < size; i++) {
+			const pos = this.newParticlePosition();
+			const vel = {
+				x: Math.random() - 0.5,
+				y: Math.random(),
+				z: Math.random() - 0.5,
+				w: Math.random(),
 			}
+			this.particles.push(new Particule(pos, vel));
+		}
+	}
+
+	private newParticlePosition(): Coordinates {
+		return {
+			x: this.emitPosition.x * 0.1,
+			y: this.emitPosition.y * 0.1,
+			z: this.emitPosition.z * 0.1,
+			w: Math.random() * Math.random(),
 		}
 	}
 }

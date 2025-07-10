@@ -1,7 +1,7 @@
 import { vec3, mat4 } from "gl-matrix";
 
 export default class Camera {
-	eye: vec3 = [0, 0, -1];
+	eye: vec3 = [0, 2, 5];
 	target: vec3 = [0, 0, 0];
 	fov: number = 45 * (Math.PI / 180);
 	minZ: number = 0.1;
@@ -9,8 +9,8 @@ export default class Camera {
 
 	move(position: vec3) {
 		vec3.add(this.eye, this.eye, position);
-		if (this.eye[2] >= -0.05) {
-			this.eye[2] = -0.05;
+		if (this.eye[2] <= 0.05) {
+			this.eye[2] = 0.05;
 		}
 	}
 
@@ -20,7 +20,7 @@ export default class Camera {
 	}
 
 	reset() {
-		this.eye = [0, 0, -1];
+		this.eye = [0, 2, 5];
 		this.target = [0, 0, 0];
 	}
 }
