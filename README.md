@@ -1,4 +1,4 @@
-# Svelte Particle
+# Svelte Particles
 
 A brief particle animation system.
 
