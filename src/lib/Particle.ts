@@ -7,12 +7,12 @@ export default class Particular {
 	elapsed: number = 0;
 	emitPosition: Coordinates = { x: 0, y: 0, z: 0, w: 1 }
 	constructor(gl: WebGL2RenderingContext) {
-		this.reset();
 		this.buffer = gl.createBuffer();
+		this.reset();
 	}
 
 	particlesSingleArray(): Float32Array<ArrayBuffer> {
-		const data = new Float32Array(this.particles.length * 4);
+		const data = new Float32Array(this.particles.length * 4 * 3);
 		for (let i = 0; i < this.particles.length; i++) {
 			const index = i * 4;
 			data[index] = this.particles[i].position.x;
@@ -50,11 +50,6 @@ export default class Particular {
 	}
 
 	addParticular(size: number) {
-		if (this.elapsed > 0) {
-			this.elapsed--;
-			return;
-		}
-		this.elapsed = 20;
 		for (let i = 0; i < size; i++) {
 			const pos = this.newParticlePosition();
 			const vel = {

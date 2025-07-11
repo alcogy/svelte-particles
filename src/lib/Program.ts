@@ -11,7 +11,6 @@ export default class Program {
 	uProjectionMatrix: WebGLUniformLocation | null = null;
 	uTexture: WebGLUniformLocation | null = null;
 	aVertexPosition: GLuint = 0;
-	aVertexNormal: GLuint = 0;
 	
 	constructor(gl: WebGL2RenderingContext) {
 		this.program = gl.createProgram();
@@ -29,10 +28,6 @@ export default class Program {
 		}
 
 		gl.useProgram(this.program);
-
-		// Attributes
-		this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
-		this.aVertexNormal = gl.getAttribLocation(this.program, 'aVertexNormal');
 
 		// Uniforms
 		this.uModelViewMatrix = gl.getUniformLocation(this.program, 'uModelViewMatrix');

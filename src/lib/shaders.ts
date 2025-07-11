@@ -4,7 +4,7 @@ precision mediump float;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
 
-in vec4 aVertexPosition;
+layout (location = 0) in vec4 aVertexPosition;
 
 void main()
 {
