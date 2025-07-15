@@ -3,9 +3,9 @@
 	import Scene from "$lib/Scene";
 		
 	let canvas: HTMLCanvasElement;
-	let emitterPosition = $state({ x: 0, y: 0, z: 0 });
+	let emitterPosition = $state({ x: 0, y: 3, z: 0 });
 	let scene: Scene;
-	let timer: number = 0;
+	let timer: number = $state(0);
 	let frame: number = $state(1);
 	
 	onMount(() => {
@@ -16,14 +16,26 @@
 			return;
 		}
 		scene = new Scene(canvas, gl);
+		scene.updateEmitter(emitterPosition);
 		scene.load().then(() => scene.render());
 	});
 
 	function startAnimation() {
+		if (timer !== 0) return;
 		timer = setInterval(() => {
 			scene.animation();
 			frame++;
 		}, 1000 / 30);
+	}
+
+	function stopAnimatioon() {
+		clearInterval(timer);
+		timer = 0;
+	}
+
+	function resetAnimation() {
+		scene.reset();
+		frame = 1;
 	}
 
 	function resizeWindow() {
@@ -74,8 +86,8 @@
 		<div>Frame: {frame}</div>
 		<div>
 			<button class="btn" onclick={() => startAnimation()}>Start</button>
-			<button class="btn" onclick={() => clearInterval(timer)}>Stop</button>
-			<button class="btn" onclick={() => {scene.reset(); frame = 1;}}>Reset</button>
+			<button class="btn" onclick={() => stopAnimatioon()}>Stop</button>
+			<button class="btn" onclick={() => resetAnimation()}>Reset</button>
 		</div>
 		<div>
 			<button class="btn" onclick={() => scene.resetCamera()}>ResetCamera</button>

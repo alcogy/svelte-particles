@@ -28,14 +28,21 @@ export default class Particular {
 	}
 
 	updateParticlePositions() {
-		const acceleration = 0.05;
+		const acceleration = 0.1;
 		for (const pt of this.particles) {
 			pt.position.x += pt.velocity.x * acceleration;
 			pt.position.y += pt.velocity.y * acceleration;
 			pt.position.z += pt.velocity.z * acceleration;
 			pt.position.w -= pt.velocity.w * acceleration * 0.1;
+			if (pt.position.y <= 0 && pt.velocity.x === 0 && pt.velocity.z === 0) {
+				pt.velocity.y = 0;
+				pt.velocity.x = (Math.random() - 0.5) * 3;
+				pt.velocity.z = (Math.random() - 0.5) * 3;
+			}
 			if (pt.position.w <= 0) {
-				pt.position = this.newParticlePosition();
+				const particle = this.newParticle();
+				pt.position = particle.pos;
+				pt.velocity = particle.vel;
 			}
 		}
 		// if (this.particles.length < 30000) {
@@ -46,28 +53,32 @@ export default class Particular {
 	reset() {
 		this.elapsed = 0;
 		this.particles = [];
-		this.addParticular(20000);
+		this.addParticular(10000);
 	}
 
 	addParticular(size: number) {
 		for (let i = 0; i < size; i++) {
-			const pos = this.newParticlePosition();
-			const vel = {
-				x: Math.random() - 0.5,
-				y: Math.random(),
-				z: Math.random() - 0.5,
-				w: Math.random(),
-			}
-			this.particles.push(new Particule(pos, vel));
+			const particle = this.newParticle();
+			
+			this.particles.push(new Particule(particle.pos, particle.vel));
 		}
 	}
 
-	private newParticlePosition(): Coordinates {
+	private newParticle(): { pos: Coordinates, vel: Coordinates } {
 		return {
-			x: this.emitPosition.x * 0.1,
-			y: this.emitPosition.y * 0.1,
-			z: this.emitPosition.z * 0.1,
-			w: Math.random() * Math.random(),
+			pos: {
+				x: this.emitPosition.x + Math.random() - 0.5,
+				y: this.emitPosition.y,
+				z: this.emitPosition.z + Math.random() - 0.5,
+				w: Math.random(),
+			},
+			vel: {
+				x: 0,
+				y: -0.96,
+				z: 0,
+				w: Math.random(),
+			}
+
 		}
 	}
 }

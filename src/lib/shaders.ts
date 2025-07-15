@@ -9,11 +9,7 @@ layout (location = 0) in vec4 aVertexPosition;
 void main()
 {
 	gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition.xyz, 1.0);
-	if (aVertexPosition.xyz == vec3(0.0, 0.0, 0.0)) {
-		gl_PointSize = 0.0;
- 	} else {
-		gl_PointSize = 12.0 * aVertexPosition.w;
-	}
+	gl_PointSize = 12.0 * aVertexPosition.w;
 }
 `;
 

@@ -1,7 +1,9 @@
 import { vec3, mat4 } from "gl-matrix";
 
+const initCamera:vec3 = [0, 5, 10];
+
 export default class Camera {
-	eye: vec3 = [0, 2, 5];
+	eye: vec3 = initCamera;
 	target: vec3 = [0, 0, 0];
 	fov: number = 45 * (Math.PI / 180);
 	minZ: number = 0.1;
@@ -20,7 +22,8 @@ export default class Camera {
 	}
 
 	reset() {
-		this.eye = [0, 2, 5];
+		this.eye = initCamera;
 		this.target = [0, 0, 0];
 	}
 }
+
