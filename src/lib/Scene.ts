@@ -51,7 +51,7 @@ export default class Scene {
 
 	reset() {
 		this.particular.reset();
-		this.render();	
+		this.clear();	
 	}
 
 	resetCamera() {
@@ -67,12 +67,14 @@ export default class Scene {
 			w: 1,
 		}
 	}
-
-	async render() {
+	clear() {
 		this.gl.clearColor(0, 0, 0, 1);
 		this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+	}
 
+	async render() {
+		this.clear();
 		this.program.setCamera(this.gl, this.camera);
 
 		// Activate texture

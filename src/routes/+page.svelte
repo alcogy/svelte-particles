@@ -17,7 +17,9 @@
 		}
 		scene = new Scene(canvas, gl);
 		scene.updateEmitter(emitterPosition);
-		scene.load().then(() => scene.render());
+		scene.reset();
+		scene.load();
+		// scene.load().then(() => scene.render());
 	});
 
 	function startAnimation() {
