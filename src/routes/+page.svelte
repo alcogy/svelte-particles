@@ -109,7 +109,9 @@
 		margin: 0;
 	}
 	.controller {
-		width: 280px;
+		flex: 1;
+		max-width: 280px;
+		min-width: 280px;
 		padding: 16px;
 		background-color: #1a1a1a;
 		display: flex;
